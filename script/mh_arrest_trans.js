@@ -2,6 +2,7 @@ require('dotenv').config();
 
 
 const { createConnection, closeConnection, getRecord, executeCommand, executeQuery } = require('../database.js');
+const {escapeQuotes} = require('../utility.js');
 const { transToEng } = require('../trans.js');
 
 // environment variables
@@ -18,7 +19,7 @@ const startTrasnliteration = async (mydb) => {
             let { id, person_name_regional } = recordList[i];
             let person_name = await transToEng(person_name_regional);
 
-            let sqlQuery = `UPDATE ${dbName}.${recordTable} SET person_name='${person_name}', ts=1 WHERE id='${id}';`;
+            let sqlQuery = `UPDATE ${dbName}.${recordTable} SET person_name='${escapeQuotes(person_name)}', ts=1 WHERE id='${id}';`;
             await executeCommand(mydb, sqlQuery);
             console.log(`trans details updated for id : ${id}.\n________________`);
 
